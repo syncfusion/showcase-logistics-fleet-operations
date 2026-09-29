@@ -1,0 +1,47 @@
+{
+  "name": "logistics-fleet-operations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test src/domain/*.test.ts",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@syncfusion/ej2-layouts": "34.1.29",
+    "@syncfusion/ej2-react-buttons": "34.1.29",
+    "@syncfusion/ej2-react-calendars": "34.1.29",
+    "@syncfusion/ej2-react-charts": "34.1.29",
+    "@syncfusion/ej2-react-dropdowns": "34.1.29",
+    "@syncfusion/ej2-react-gantt": "34.1.29",
+    "@syncfusion/ej2-react-grids": "34.1.29",
+    "@syncfusion/ej2-react-inputs": "34.1.29",
+    "@syncfusion/ej2-react-kanban": "34.1.29",
+    "@syncfusion/ej2-react-layouts": "34.1.29",
+    "@syncfusion/ej2-react-lists": "34.1.29",
+    "@syncfusion/ej2-react-maps": "34.1.29",
+    "@syncfusion/ej2-react-navigations": "34.1.29",
+    "@syncfusion/ej2-react-popups": "34.1.29",
+    "@syncfusion/ej2-react-schedule": "34.1.29",
+    "@syncfusion/ej2-tailwind3-dark-theme": "34.1.29",
+    "@syncfusion/ej2-tailwind3-theme": "34.1.29",
+    "lucide-react": "1.47.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "@types/node": "26.6.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "7.0.2",
+    "vite": "8.3.0"
+  }
+}

@@ -1,0 +1,268 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: 14px; color-scheme: light;
+  /* Factory BDS/Sales CRM primitive and semantic tokens. */
+  --sf-blue-700: #175CD3; --sf-blue-300: #93C5FD; --sf-slate-950: #172033; --sf-slate-700: #667085;
+  --sf-slate-50: #F6F8FB; --sf-white: #FFFFFF; --sf-slate-200: #E5E9F0; --sf-red-700: #B42318;
+  --sf-amber-700: #B54708; --sf-green-700: #027A48;
+  --primary: var(--sf-slate-950); --secondary: var(--sf-slate-700); --accent: var(--sf-blue-700); --background: var(--sf-slate-50);
+  --surface: var(--sf-white); --border: var(--sf-slate-200); --error: var(--sf-red-700); --warning: var(--sf-amber-700); --success: var(--sf-green-700); --info: var(--sf-blue-700);
+  --chart-series-primary: var(--sf-blue-700); --chart-series-secondary: var(--sf-green-700); --chart-series-tertiary: var(--sf-amber-700);
+  --selection-bg: var(--sf-blue-700); --selection-fg: var(--sf-white); --pager-fg: var(--secondary); --pager-current-bg: var(--sf-blue-700); --pager-current-fg: var(--sf-white);
+  --xs: 4px; --sm: 8px; --md: 12px; --lg: 16px; --xl: 24px; --radius: 8px;
+  --color-sf-primary: 23, 92, 211; --color-sf-primary-text-color: var(--sf-white);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark; --primary: #E5E7EB; --secondary: #94A3B8; --accent: var(--sf-blue-300); --background: #0F172A;
+  --surface: #111827; --border: #334155; --error: #FCA5A5; --warning: #FBBF24; --success: #86EFAC; --info: var(--sf-blue-300);
+  --chart-series-primary: var(--sf-blue-300); --chart-series-secondary: #86EFAC; --chart-series-tertiary: #FBBF24;
+  --selection-bg: var(--sf-blue-300); --selection-fg: var(--background); --pager-fg: var(--secondary); --pager-current-bg: var(--sf-blue-300); --pager-current-fg: var(--background);
+  --color-sf-primary: 147, 197, 253; --color-sf-primary-text-color: #0F172A;
+}
+* { box-sizing: border-box; }
+html { overflow-x: hidden; }
+body { margin: 0; background: var(--background); color: var(--primary); overflow-x: hidden; }
+::selection { background: var(--selection-bg); color: var(--selection-fg); }
+a { color: inherit; text-decoration: none; }
+button, input, select { font: inherit; }
+button, a, input, .e-control { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid var(--accent) !important; outline-offset: 3px; }
+h1 { font-size: 28px; font-weight: 700; line-height: 1.25; margin: 0 0 var(--sm); letter-spacing: -.6px; }
+h2 { font-size: 22px; font-weight: 600; line-height: 1.3; margin: 0; }
+h3 { font-size: 18px; font-weight: 600; margin: 0; }
+p { line-height: 1.6; margin: var(--sm) 0; }
+small, .muted { color: var(--secondary); }
+.skip-link { position: fixed; top: -80px; left: 16px; z-index: 10000; padding: 12px; background: var(--surface); }
+.skip-link:focus { top: 8px; }
+.app-shell { min-height: 100vh; }
+/* SidebarComponent owns .e-sidebar* classes. Passing className lets React
+   rewrite `class` on the next render and drop e-open / e-left / e-push. */
+#workspace-sidebar:not(.e-open):not(.e-close) { position: fixed; visibility: hidden; width: 224px; }
+#workspace-sidebar.e-sidebar {
+  background: var(--surface) !important; color: var(--primary); border-right: 1px solid var(--border) !important;
+  padding: var(--xl) var(--lg); display: flex; flex-direction: column; gap: 32px; height: 100dvh; max-height: 100dvh;
+}
+.brand { display: flex; align-items: center; gap: var(--md); padding: var(--sm); }
+.sidebar-close { margin-left: auto; display: none !important; }
+.brand-icon { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); padding: var(--sm); border-radius: var(--radius); }
+.brand strong { display: block; letter-spacing: 1px; font-size: 15px; }
+.brand small { display: block; font-size: 12px; margin-top: var(--xs); }
+.nav-label, .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--secondary); }
+.nav-label { padding: 0 var(--md); margin-bottom: var(--md); }
+.navigation { display: grid; gap: var(--xs); }
+.navigation a { display: flex; gap: var(--md); align-items: center; padding: var(--md); border-radius: 6px; color: var(--secondary); }
+.navigation a:hover { background: var(--background); color: var(--primary); }
+.navigation a[aria-current="page"] { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); color: var(--accent); font-weight: 700; }
+.sidebar-footer { margin-top: auto; border-top: 1px solid var(--border); padding: var(--lg) var(--sm) 0; font-size: 12px; }
+.workspace { min-width: 0; min-height: 100vh; }
+@media (min-width: 801px) { .app-shell > .workspace { margin-left: 224px; } }
+.topbar { min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: var(--lg); padding: var(--lg) 32px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.topbar-left, .topbar-actions, .inline { display: flex; align-items: center; gap: var(--md); }
+.demo-clock { font-size: 12px; color: var(--secondary); border-right: 1px solid var(--border); padding-right: var(--lg); }
+.demo-clock strong { display: block; color: var(--primary); margin-bottom: var(--xs); }
+.profile-pill { font-size: 12px; white-space: nowrap; display: flex; align-items: center; gap: var(--sm); }
+.profile-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+.profile-pill[data-signed-out="true"]::before { background: var(--secondary); }
+.page-content { padding: 32px; max-width: 1600px; margin-inline: auto; }
+.page-heading { display: flex; justify-content: space-between; gap: var(--lg); align-items: flex-start; margin-bottom: var(--xl); }
+.page-heading p { margin: 0; color: var(--secondary); }
+.eyebrow { margin-bottom: var(--md); color: var(--accent); }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); min-width: 0; overflow: hidden; }
+.panel-heading { display: flex; justify-content: space-between; gap: var(--lg); align-items: center; padding: var(--xl); }
+.panel-heading h2 { font-size: 18px; }
+.panel-heading p { font-size: 12px; color: var(--secondary); margin-bottom: 0; }
+.metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--lg); margin-bottom: var(--xl); }
+.metric.e-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: none; color: var(--primary); }
+.metric.e-card:hover { border-color: var(--accent); }
+.metric-interactive { cursor: pointer; }
+.metric-interactive:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.metric .e-card-content { position: relative; display: grid; min-height: 86px; padding: var(--md) var(--lg); }
+.metric-label { width: 100%; color: var(--secondary); display: flex; align-items: center; font-size: 13px; }
+.metric-icon { position: absolute; top: calc(var(--lg) + 1px); right: var(--lg); display: grid; width: 34px; height: 34px; place-items: center; border-radius: 6px; color: var(--success); background: color-mix(in srgb, var(--success) 10%, var(--surface)); }
+.metric-icon[data-tone="danger"] { color: var(--error); background: color-mix(in srgb, var(--error) 10%, var(--surface)); }
+.metric-icon[data-tone="warning"] { color: var(--warning); background: color-mix(in srgb, var(--warning) 10%, var(--surface)); }
+.metric-icon[data-tone="info"] { color: var(--info); background: color-mix(in srgb, var(--info) 10%, var(--surface)); }
+.metric-number { display: block; font-size: 28px; font-weight: 700; line-height: 1.2; margin: var(--sm) 0 var(--xs); letter-spacing: -1px; }
+.metric-note { font-size: 11px; color: var(--secondary); }
+.overview-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--xl); margin-bottom: var(--xl); }
+.chart-wrap { padding: 0 var(--lg) var(--lg); }
+.toolbar { padding: var(--lg) var(--xl); display: flex; gap: var(--lg); align-items: end; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.toolbar .field { width: 220px; }
+.toolbar label { font-size: 12px; }
+.toolbar-note { margin-left: auto; color: var(--secondary); font-size: 12px; padding-bottom: var(--sm); }
+.grid-scroll { overflow-x: auto; }
+.status-badge { display: inline-flex; align-items: center; gap: 6px; border-radius: 4px; padding: 4px 7px; background: var(--background); font-size: 11px; color: var(--secondary); border: 1px solid var(--border); }
+.status-badge[data-tone="success"] { color: var(--success); }
+.status-badge[data-tone="info"] { color: var(--info); }
+.status-badge[data-tone="warning"] { color: var(--warning); }
+.status-badge[data-tone="danger"] { color: var(--error); }
+.status-badge::before { content: ''; width: 5px; height: 5px; background: currentColor; border-radius: 50%; }
+.e-btn.action-button { color: var(--accent); background: transparent; border: 1px solid var(--border); text-transform: none; box-shadow: none; font-size: 12px; border-radius: 4px; }
+.e-btn.primary-button { background: var(--accent); border-color: var(--accent); color: var(--surface); text-transform: none; font-weight: 600; border-radius: 6px; }
+[data-theme="dark"] .e-btn.primary-button { color: var(--background); }
+.e-btn.icon-button { background: transparent; border: 1px solid var(--border); color: var(--primary); min-width: 36px; height: 36px; padding: var(--sm); border-radius: 6px; box-shadow: none; }
+.e-btn.icon-button svg { display: block; }
+.e-btn:disabled { opacity: .55; }
+.field { display: grid; gap: var(--sm); min-width: 0; }
+.field label { font-weight: 600; color: var(--primary); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--lg); margin: var(--xl) 0; }
+.form-grid .full { grid-column: 1 / -1; }
+.form-help { font-size: 12px; color: var(--secondary); }
+.form-actions { display: flex; justify-content: flex-end; gap: var(--md); margin-top: var(--xl); }
+.notice { border: 1px solid var(--border); border-left: 3px solid var(--accent); background: var(--surface); padding: var(--md) var(--lg); border-radius: 4px; font-size: 13px; margin-bottom: var(--lg); }
+.notice.error { border-left-color: var(--error); color: var(--error); }
+.notice.success { border-left-color: var(--success); }
+.notice.info { border-left-color: var(--info); }
+.empty-state { padding: 48px var(--xl); text-align: center; color: var(--secondary); }
+.empty-state svg { color: var(--accent); margin: 0 auto var(--lg); }
+.empty-state h2 { color: var(--primary); margin-bottom: var(--sm); }
+.page-footnote { font-size: 12px; color: var(--secondary); margin-top: var(--lg); }
+.mobile-menu { display: none !important; }
+.skeleton { background: color-mix(in srgb, var(--border) 65%, var(--surface)); height: 150px; border-radius: var(--radius); animation: pulse 1.5s ease-in-out infinite alternate; }
+.skeleton-title { height: 30px; width: 50%; margin-bottom: var(--xl); }
+.e-dialog { max-width: calc(100vw - 24px) !important; max-height: calc(100dvh - 24px) !important; }
+.e-dlg-content { overflow-y: auto; }
+.e-grid { border: none !important; }
+.e-grid .e-rowcell { padding-block: 14px; }
+/* Same bundled-theme hardcoded-color gap as Kanban above: the grid header
+   band stayed light-mode white after the dark stylesheet swap. */
+.e-grid .e-gridheader, .e-grid .e-headercell, .e-grid .e-headercelldiv, .e-grid .e-columnheader { background: var(--surface) !important; color: var(--primary) !important; border-color: var(--border) !important; }
+.e-grid .e-rowcell, .e-grid .e-row { background: var(--surface) !important; color: var(--primary) !important; border-color: var(--border) !important; }
+.e-pager { color: var(--pager-fg) !important; background: var(--surface) !important; }
+.e-pager .e-currentitem, .e-pager .e-currentitem:hover { background: var(--pager-current-bg) !important; color: var(--pager-current-fg) !important; opacity: 1; }
+.e-pager .e-numericitem, .e-pager .e-pagerconstant { color: var(--pager-fg) !important; opacity: 1; }
+
+/* Dashboard Layout (Overview) */
+.dashboard-wrap { margin-bottom: var(--xl); overflow-x: hidden; }
+/* !important here for the same reason as the Kanban/Grid overrides below:
+   the bundled dashboard-layout theme CSS hardcodes panel chrome colors
+   rather than using theme-swappable custom properties. */
+.e-dashboardlayout .e-panel { background: var(--surface) !important; border: 1px solid var(--border) !important; border-radius: var(--radius); color: var(--primary) !important; }
+.e-dashboardlayout .e-panel-header { background: var(--surface) !important; color: var(--primary) !important; font-weight: 600; padding: var(--md) var(--lg); border-bottom: 1px solid var(--border) !important; }
+.e-dashboardlayout .e-panel-content { padding: 0; overflow: auto; background: var(--surface) !important; color: var(--primary) !important; }
+.panel-move-menu { display: flex; gap: 4px; }
+
+/* Live Map */
+.map-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: var(--xl); }
+.map-filters { display: flex; flex-wrap: wrap; gap: var(--sm); }
+/* ListView theme CSS loads after this file and sets row chrome (40px rows,
+   full-width dividers, pressed/hover fills). Override it so each item stays
+   a bordered route card, in both themes. */
+.route-list.e-listview { display: block; border: none !important; border-radius: 0 !important; background: transparent !important; box-shadow: none; padding: var(--lg); max-height: 620px; overflow-y: auto; font-family: inherit; color: var(--primary); }
+.route-list.e-listview .e-list-parent { display: grid; gap: var(--sm); margin: 0; padding: 0; list-style: none; }
+.route-list.e-listview .e-list-item,
+.route-list.e-listview .e-list-item.e-hover,
+.route-list.e-listview .e-list-item.e-active,
+.route-list.e-listview .e-list-item.e-focused { height: auto !important; line-height: inherit !important; padding: 0 !important; margin: 0; border: none !important; background: transparent !important; color: inherit !important; cursor: pointer; }
+.route-list-item { border: 1px solid var(--border); border-radius: 6px; padding: var(--md); background: var(--background); text-align: left; }
+.route-list-item h3 { display: block; font-size: 13px; margin-bottom: var(--xs); }
+.route-list-item p { display: block; font-size: 11px; margin: 2px 0; color: var(--secondary); }
+.route-list-item .status-badge { display: inline-flex; }
+@media (max-width: 1024px) { .map-layout { grid-template-columns: minmax(0, 1fr); } }
+
+/* Kanban board */
+.board-scroll { overflow-x: auto; padding: var(--lg); }
+.board-scroll .e-kanban { min-width: 1100px; background: transparent; }
+/* The bundled Kanban theme CSS hardcodes its default card chrome instead of
+   using theme-swappable custom properties, so its cards stayed light-mode
+   white after switching to the dark stylesheet — force them onto our own
+   semantic tokens so the board matches the rest of the shell in both themes. */
+.e-kanban .e-card, .e-kanban .e-card-header, .e-kanban .e-card-content, .e-kanban .e-card-header-title, .e-kanban .e-card-header-caption { background: var(--surface) !important; color: var(--primary) !important; border-color: var(--border) !important; }
+/* Long "<customer> — <kind>" titles (Exceptions.tsx cardSettings.headerField)
+   otherwise overflow the fixed-width card header instead of wrapping. */
+.e-kanban .e-card-header-title { white-space: normal; overflow-wrap: break-word; }
+.e-kanban .e-content-row, .e-kanban .e-column-header, .e-kanban .e-kanban-table, .e-kanban .e-content-cells { background: transparent !important; border-color: var(--border) !important; }
+.e-kanban .e-column-header .e-header-text { color: var(--primary) !important; }
+.e-kanban .e-card.e-template { padding: 0; }
+.board-card { padding: var(--md); color: var(--primary); background: var(--surface); }
+.board-card[data-tone="danger"] { border-left: 3px solid var(--error); }
+.board-card[data-tone="warning"] { border-left: 3px solid var(--warning); }
+.board-card[data-tone="info"] { border-left: 3px solid var(--info); }
+.board-card[data-tone="success"] { border-left: 3px solid var(--success); }
+.board-card-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.board-card h3 { font-size: 13px; margin: var(--sm) 0 var(--xs); line-height: 1.4; }
+.board-card p { font-size: 12px; color: var(--secondary); margin: 2px 0; }
+.grid-scroll .e-ddl { width: 100%; }
+.board-card .e-btn { margin-top: var(--sm); }
+.board-id { font-size: 11px; color: var(--secondary); }
+.move-to-select { margin-top: var(--sm); width: 100%; padding: 6px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface); color: var(--primary); font-size: 12px; }
+.exceptions-layout { display: grid; gap: var(--xl); }
+
+/* Scheduler / Gantt containers */
+.control-panel { padding: var(--lg); }
+.e-schedule, .e-gantt { border: none !important; }
+/* Same bundled-theme hardcoded-color gap as Kanban/Grid/Dashboard Layout
+   above: Scheduler and Gantt also stayed light-mode white after the dark
+   stylesheet swap. */
+.e-schedule, .e-schedule .e-content-wrap, .e-schedule .e-work-cells, .e-schedule .e-resource-cells,
+.e-schedule .e-timeline-view .e-resource-left-td, .e-schedule .e-timeline-view .e-resource-text-wrap,
+.e-schedule .e-toolbar, .e-schedule .e-toolbar-items, .e-schedule .e-schedule-table, .e-schedule .e-date-header-wrap,
+.e-schedule .e-left-indent-wrap, .e-schedule .e-resource-column-wrap {
+  background: var(--surface) !important; color: var(--primary) !important; border-color: var(--border) !important;
+}
+.e-schedule .e-resource-text-wrap *, .e-schedule .e-toolbar-item .e-tbar-btn-text { color: var(--primary) !important; }
+.e-schedule .e-header-cells, .e-schedule .e-header-day, .e-schedule .e-header-date, .e-schedule .e-time-cells,
+.e-schedule .e-resource-cells, .e-schedule td.e-resource-left-td, .e-schedule .e-timeline-view .e-resource-text {
+  background: var(--surface) !important; color: var(--primary) !important; border-color: var(--border) !important;
+}
+.e-gantt, .e-gantt .e-content, .e-gantt .e-gridheader, .e-gantt .e-headercell, .e-gantt .e-rowcell, .e-gantt .e-chart-root-container {
+  background: var(--surface) !important; color: var(--primary) !important; border-color: var(--border) !important;
+}
+.e-gantt .e-toolbar, .e-gantt .e-toolbar-items { background: var(--surface) !important; border-color: var(--border) !important; }
+.e-gantt .e-toolbar .e-tbar-btn-text, .e-gantt .e-toolbar .e-icons { color: var(--primary) !important; }
+.e-gantt .e-gantt-chart .e-left-label-inner-div,
+.e-gantt .e-gantt-chart .e-right-label-inner-div { color: var(--primary) !important; font-size: 12px; font-weight: 600; }
+.e-gantt .e-baseline-bar { background: var(--secondary) !important; border-color: var(--secondary) !important; height: 4px !important; }
+.e-gantt .e-event-markers.gantt-now-marker { border-left: 2px solid var(--accent) !important; }
+.e-gantt .e-event-markers.gantt-now-marker .e-span-label { top: 6px; background: var(--accent); color: var(--selection-fg); }
+.gantt-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; list-style: none; margin: 0 0 var(--md); padding: 0; color: var(--secondary); font-size: 12px; }
+.gantt-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.gantt-swatch { width: 18px; height: 8px; border-radius: 4px; background: var(--info); }
+.gantt-swatch[data-tone="success"] { background: var(--success); }
+.gantt-swatch[data-tone="warning"] { background: var(--warning); }
+.gantt-swatch[data-tone="danger"] { background: var(--error); }
+.gantt-swatch-actual { height: 4px; background: var(--secondary); }
+.gantt-swatch-now { width: 2px; height: 14px; border-radius: 1px; background: var(--accent); }
+.gantt-tip { display: grid; gap: 2px; min-width: 180px; font-size: 12px; line-height: 1.4; }
+.gantt-tip p { margin: 0; }
+.e-taskbar-main-container.route-tone-success .e-gantt-child-taskbar,
+.e-taskbar-main-container.route-tone-success .e-gantt-parent-taskbar,
+.e-manualparent-main-container.route-tone-success .e-gantt-manualparent-taskbar { background: color-mix(in srgb, var(--success) 28%, var(--surface)) !important; border-color: var(--success) !important; }
+.e-taskbar-main-container.route-tone-success .e-gantt-child-progressbar,
+.e-taskbar-main-container.route-tone-success .e-gantt-parent-progressbar { background: var(--success) !important; border-color: var(--success) !important; }
+.e-taskbar-main-container.route-tone-info .e-gantt-child-taskbar,
+.e-taskbar-main-container.route-tone-info .e-gantt-parent-taskbar,
+.e-manualparent-main-container.route-tone-info .e-gantt-manualparent-taskbar { background: color-mix(in srgb, var(--info) 28%, var(--surface)) !important; border-color: var(--info) !important; }
+.e-taskbar-main-container.route-tone-info .e-gantt-child-progressbar,
+.e-taskbar-main-container.route-tone-info .e-gantt-parent-progressbar { background: var(--info) !important; border-color: var(--info) !important; }
+.e-taskbar-main-container.route-tone-warning .e-gantt-child-taskbar,
+.e-taskbar-main-container.route-tone-warning .e-gantt-parent-taskbar,
+.e-manualparent-main-container.route-tone-warning .e-gantt-manualparent-taskbar { background: color-mix(in srgb, var(--warning) 28%, var(--surface)) !important; border-color: var(--warning) !important; }
+.e-taskbar-main-container.route-tone-warning .e-gantt-child-progressbar,
+.e-taskbar-main-container.route-tone-warning .e-gantt-parent-progressbar { background: var(--warning) !important; border-color: var(--warning) !important; }
+.e-taskbar-main-container.route-tone-danger .e-gantt-child-taskbar,
+.e-taskbar-main-container.route-tone-danger .e-gantt-parent-taskbar,
+.e-manualparent-main-container.route-tone-danger .e-gantt-manualparent-taskbar { background: color-mix(in srgb, var(--error) 28%, var(--surface)) !important; border-color: var(--error) !important; }
+.e-taskbar-main-container.route-tone-danger .e-gantt-child-progressbar,
+.e-taskbar-main-container.route-tone-danger .e-gantt-parent-progressbar { background: var(--error) !important; border-color: var(--error) !important; }
+.topbar .workspace-breadcrumb.e-breadcrumb { background: transparent !important; }
+.topbar .workspace-breadcrumb .e-breadcrumb-text,
+.topbar .workspace-breadcrumb .e-breadcrumb-separator,
+.topbar .workspace-breadcrumb .e-breadcrumb-icon { color: var(--secondary) !important; }
+.topbar .workspace-breadcrumb .e-breadcrumb-item[data-active-item] .e-breadcrumb-text { color: var(--primary) !important; font-weight: 700; }
+
+@keyframes pulse { to { opacity: .45; } }
+@media (max-width: 1100px) { .demo-clock { display: none; } .page-content { padding: var(--xl); } .topbar { padding-inline: var(--xl); } }
+@media (max-width: 800px) { .app-shell { display: block; } .app-shell > .workspace { margin-left: 0; } .mobile-menu, .sidebar-close { display: inline-flex !important; } #workspace-sidebar.e-sidebar { width: min(224px, calc(100vw - 48px)) !important; } .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } .topbar { gap: var(--sm); padding: var(--md) var(--lg); } .topbar-left > span { display: none; } .topbar-actions { gap: var(--sm); } .page-content { padding: var(--lg); } .profile-pill { font-size: 11px; } .page-heading { flex-direction: column; } }
+@media (max-width: 440px) { h1 { font-size: 24px; } .metric .e-card-content { min-height: 126px; padding: var(--lg); } .metric-icon { top: var(--md); right: var(--md); } .metrics { gap: var(--sm); grid-template-columns: 1fr; } .metric-label { font-size: 12px; } .metric-note { display: block; min-height: 24px; } .toolbar { padding: var(--lg); } .toolbar .field { width: 100%; } .form-grid { grid-template-columns: 1fr; } .panel-heading { padding: var(--lg); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* /health status page (factory/standards/health-check.md) */
+.health-page { max-width: 900px; }
+.health-grid { display: grid; gap: var(--sm); padding: var(--lg); }
+.health-row { display: flex; align-items: center; justify-content: space-between; gap: var(--md); padding: var(--sm) 0; border-bottom: 1px solid var(--border); }
+.health-row:last-of-type { border-bottom: none; }
+.health-checks-table { width: 100%; border-collapse: collapse; margin-top: var(--md); font-size: 13px; }
+.health-checks-table th, .health-checks-table td { text-align: left; padding: var(--sm) var(--md); border-bottom: 1px solid var(--border); }
+.health-checks-table th { color: var(--secondary); font-weight: 600; font-size: 12px; }

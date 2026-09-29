@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Infrastructure\LogisticsFleetOperations.Infrastructure.csproj" />
+    <ProjectReference Include="..\Domain\LogisticsFleetOperations.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Reads the same user-secrets store as the Api project (by UserSecretsId below), so the
+         write connection string never needs to be duplicated or committed. -->
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>f12479f5-0cf2-4239-84ff-14d3728a28d1</UserSecretsId>
+  </PropertyGroup>
+
+</Project>

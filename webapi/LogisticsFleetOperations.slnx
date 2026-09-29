@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Api/">
+    <Project Path="src/Api/LogisticsFleetOperations.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Application/">
+    <Project Path="src/Application/LogisticsFleetOperations.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/Domain/">
+    <Project Path="src/Domain/LogisticsFleetOperations.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/Infrastructure/">
+    <Project Path="src/Infrastructure/LogisticsFleetOperations.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Seed/">
+    <Project Path="src/Seed/LogisticsFleetOperations.Seed.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LogisticsFleetOperations.Tests/LogisticsFleetOperations.Tests.csproj" />
+    <Project Path="tests/LogisticsFleetOperations.IntegrationTests/LogisticsFleetOperations.IntegrationTests.csproj" />
+  </Folder>
+</Solution>
